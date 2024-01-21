@@ -21,7 +21,7 @@ public class Player : Ship
         
         base.Update();
 
-        if (Input.touchCount > 0){
+        if (Input.touchCount > 0 && Constants.isAlive){
             Touch touch = Input.GetTouch(0);
             if (previousTouch == null || touch.phase == TouchPhase.Began){ // touch just started
                 previousTouch = touch.position;
@@ -38,7 +38,10 @@ public class Player : Ship
         }
     }
 
-    // exactly the same as Ship.cs's Shoot but it also shoots blocks
+    public override void Explode(){
+        base.Explode();
+        Constants.isAlive = false;
+    }
 
     public override GameObject Spawn(string name)
     {

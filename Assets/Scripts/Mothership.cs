@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using TMPro;
 
 // this script handles all the ships
 
@@ -13,6 +14,7 @@ public class Mothership : MonoBehaviour
     public Sprite blockSprite; // just a white square
 
     [Header("Objects")]
+    public GameObject blockTextTemplate; // empty gameobject with TMP_TEXT
     public GameObject bullet; // player bullet GO
     public GameObject bulletRed; // enemy bullet GO
     public HealthBar healthBar; // background element of the health bar
@@ -32,7 +34,7 @@ public class Mothership : MonoBehaviour
     private GradientAlphaKey[] alphaKeys;
     private void Start() {
         screenWidth = Camera.main.orthographicSize * Camera.main.aspect;
-
+        
         // gradient for coloring blocks
         gradient = new Gradient();
         colorKeys = new GradientColorKey[3];
@@ -56,6 +58,7 @@ public class Mothership : MonoBehaviour
         };
         playerGO = player.Spawn("Player", new Vector3(2, -4, 0), Quaternion.identity); // instantiate the player
         player = playerGO.GetComponent<Player>(); // update the player object to the one used by the GO
+        Constants.isAlive = true;
 
         // enemy = new Enemy(enemySprite, player){ // create new enemy object
         //     bullet = bulletRed
@@ -69,7 +72,6 @@ public class Mothership : MonoBehaviour
         // instatiate all the blocks
         for (int i = -(int)Mathf.Floor(screenWidth) - 2; i < screenWidth + 2; i++){
             GameObject blockGO = spawnBlock("block", new Vector3(i*0.9f, 0, 0));
-            blockGO.layer =  LayerMask.NameToLayer("Block");
 
             blocksGO.Add(blockGO);
             blocks.Add(blockGO.GetComponent<Block>());
@@ -78,22 +80,27 @@ public class Mothership : MonoBehaviour
     }
 
     private void Update() {
-        healthBar.Refresh(player.health / (float)player.maxHealth); // update the player's health bar
+        if (Constants.isAlive){
+            healthBar.Refresh(player.health / (float)player.maxHealth); // update the player's health bar
+        }
     }
 
     // instantiates a block in the world space
     public GameObject spawnBlock(string name, Vector3 position){
         GameObject block = new GameObject(name);
+        GameObject text = Instantiate(blockTextTemplate);
 
         // add components
         SpriteRenderer spriteRenderer = block.AddComponent<SpriteRenderer>();
         Block blockComponent = block.AddComponent<Block>();
         BoxCollider2D boxCollider = block.AddComponent<BoxCollider2D>();
 
-        boxCollider.size = new Vector2(1,1);
+        boxCollider.size = new Vector2(1.3f,1.3f);
+        boxCollider.isTrigger = true;
 
         blockComponent.sprite = blockSprite;
         blockComponent.health = 65;
+        blockComponent.player = playerGO;
 
         spriteRenderer.sprite = blockSprite;
         spriteRenderer.color = gradient.Evaluate(blockComponent.health / 100f); // color based on health
@@ -101,6 +108,14 @@ public class Mothership : MonoBehaviour
         block.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
         block.transform.position = position;
         block.transform.parent = transform;
+
+        text.transform.SetParent(block.transform);
+        text.GetComponent<RectTransform>().localPosition = Vector3.zero;
+        text.GetComponent<RectTransform>().localScale = new Vector3(1,1,1);
+        text.GetComponent<TMP_Text>().text = blockComponent.health + "";
+
+
+        block.layer = LayerMask.NameToLayer("Block");
 
         return block;
     }

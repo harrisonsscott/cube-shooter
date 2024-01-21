@@ -53,18 +53,20 @@ public class Ship : MonoBehaviour
             LeanTween.move(bulletClone, transform.position + transform.up * 10, 1/bulletSpeed).setOnComplete(() => {
                 Destroy(bulletClone); // destroy bullet when done
             });
+
+            // if the bullet hits anything, it'll trigger OnTriggerEnter2D
             return 1;
         } else {
             return 0;
         }
     }
 
-    public void Explode(){ // automatically called when the ship dies
+    public virtual void Explode(){ // automatically called when the ship dies
         Destroy(gameObject);
         Debug.Log("boom!");
     }
 
-    private void OnTriggerEnter2D(Collider2D other) { // when a bullet hits the ship
+    public virtual void OnTriggerEnter2D(Collider2D other) { // when a bullet hits the ship
         if (LayerMask.LayerToName(other.gameObject.layer) == "Bullet"){ // make sure the collider is a bullet
             if (other.gameObject != bulletClone){ // prevent the ship from dying from its own bullet
                 int damage = other.gameObject.GetComponent<Bullet>().damage;
@@ -76,13 +78,13 @@ public class Ship : MonoBehaviour
     }
 
     public virtual void Update() {
-        if (health <= 0){ // explode if health is 0 or less
+        if (health <= 0 && Constants.isAlive){ // explode if health is 0 or less
             Explode();
         }
 
         index += Time.deltaTime; // timer
 
-        if (index > reloadSpeed){ // shoot every so often
+        if (index > reloadSpeed  && Constants.isAlive){ // shoot every so often
             if (Shoot() == 1) // if the ship shot a bullet, reset the timer
                 index = 0;
         }
