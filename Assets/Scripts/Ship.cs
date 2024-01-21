@@ -15,7 +15,7 @@ public class Ship : MonoBehaviour
     public GameObject bullet;
     public Sprite sprite;
 
-    private GameObject bulletClone; // clone of bullet
+    private GameObject bulletClone;
     private float index;
 
     public Ship(Sprite sprite) {
@@ -40,7 +40,7 @@ public class Ship : MonoBehaviour
     }
 
 
-    public int Shoot(){ // sends a raycast out, and shoots if it hits something
+    public virtual int Shoot(){ // sends a raycast out, and shoots if it hits something
         int layerMask = ~(1 << gameObject.layer | 1 << LayerMask.NameToLayer("Bullet")); // everything but ship layer and bullet layer
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, Mathf.Infinity, layerMask);
@@ -75,7 +75,7 @@ public class Ship : MonoBehaviour
         
     }
 
-    public void Update() {
+    public virtual void Update() {
         if (health <= 0){ // explode if health is 0 or less
             Explode();
         }
@@ -99,7 +99,7 @@ public class Ship : MonoBehaviour
         BoxCollider2D boxCollider = ship.AddComponent<BoxCollider2D>();
 
         spriteRenderer.sprite = sprite; // set sprite
-        boxCollider.size = new Vector2(5,5); // set collider size
+        boxCollider.size = new Vector2(5,5); // set collider size  
 
         // set transform data
         ship.transform.localScale = new Vector3(0.2f,0.2f,0.2f);

@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class Player : Ship
 {
     private Vector2 previousTouch; // the touch position of the last frame
+    private GameObject bulletClone;
+    private float index;
     public Player(Sprite sprite) : base(sprite) {
         this.sprite = sprite;
 
@@ -17,7 +19,7 @@ public class Player : Ship
 
     private new void Update() {
         
-        base.Update(); // retain Ship.cs's update function
+        base.Update();
 
         if (Input.touchCount > 0){
             Touch touch = Input.GetTouch(0);
@@ -35,6 +37,8 @@ public class Player : Ship
             previousTouch = touch.position;
         }
     }
+
+    // exactly the same as Ship.cs's Shoot but it also shoots blocks
 
     public override GameObject Spawn(string name)
     {

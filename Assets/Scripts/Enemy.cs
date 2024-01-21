@@ -12,8 +12,6 @@ public class Enemy : Ship
 
     private new void Update() {
         base.Update(); // retain Ship.cs's update function
-
-        transform.position -= new Vector3(0, Time.deltaTime * Constants.gravity, 0);
     }
 
     public void Follow(){
