@@ -78,13 +78,13 @@ public class Ship : MonoBehaviour
     }
 
     public virtual void Update() {
-        if (health <= 0 && Constants.isAlive){ // explode if health is 0 or less
+        if (health <= 0 && GlobalVariables.isAlive){ // explode if health is 0 or less
             Explode();
         }
 
         index += Time.deltaTime; // timer
 
-        if (index > reloadSpeed  && Constants.isAlive){ // shoot every so often
+        if (index > reloadSpeed  && GlobalVariables.isAlive){ // shoot every so often
             if (Shoot() == 1) // if the ship shot a bullet, reset the timer
                 index = 0;
         }

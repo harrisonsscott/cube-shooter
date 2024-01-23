@@ -36,7 +36,7 @@ public class Block : MonoBehaviour {
     }
 
     private void Update() {
-        if (!Constants.isAlive){
+        if (!GlobalVariables.isAlive){
             Destroy(gameObject);
             return;
         }

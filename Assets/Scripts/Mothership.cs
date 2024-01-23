@@ -58,8 +58,7 @@ public class Mothership : MonoBehaviour
         };
         playerGO = player.Spawn("Player", new Vector3(2, -4, 0), Quaternion.identity); // instantiate the player
         player = playerGO.GetComponent<Player>(); // update the player object to the one used by the GO
-        Constants.isAlive = true;
-
+        GlobalVariables.isAlive = true;
         // enemy = new Enemy(enemySprite, player){ // create new enemy object
         //     bullet = bulletRed
         // };
@@ -70,17 +69,12 @@ public class Mothership : MonoBehaviour
         blocksGO = new List<GameObject>();
 
         // instatiate all the blocks
-        for (int i = -(int)Mathf.Floor(screenWidth) - 2; i < screenWidth + 2; i++){
-            GameObject blockGO = spawnBlock("block", new Vector3(i*0.9f, 0, 0));
-
-            blocksGO.Add(blockGO);
-            blocks.Add(blockGO.GetComponent<Block>());
-        }
+        spawnRow();
 
     }
 
     private void Update() {
-        if (Constants.isAlive){
+        if (GlobalVariables.isAlive){
             healthBar.Refresh(player.health / (float)player.maxHealth); // update the player's health bar
         }
     }
@@ -118,5 +112,15 @@ public class Mothership : MonoBehaviour
         block.layer = LayerMask.NameToLayer("Block");
 
         return block;
+    }
+
+    // adds a row of blocks to the blocks list
+    private void spawnRow(){
+        for (int i = -(int)Mathf.Floor(screenWidth) - 2; i < screenWidth + 2; i++){
+            GameObject blockGO = spawnBlock("block", new Vector3(i*0.9f, 0, 0));
+
+            blocksGO.Add(blockGO);
+            blocks.Add(blockGO.GetComponent<Block>());
+        }
     }
 }

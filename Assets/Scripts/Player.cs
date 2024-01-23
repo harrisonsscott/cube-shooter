@@ -21,7 +21,7 @@ public class Player : Ship
         
         base.Update();
 
-        if (Input.touchCount > 0 && Constants.isAlive){
+        if (Input.touchCount > 0 && GlobalVariables.isAlive){
             Touch touch = Input.GetTouch(0);
             if (previousTouch == null || touch.phase == TouchPhase.Began){ // touch just started
                 previousTouch = touch.position;
@@ -40,7 +40,7 @@ public class Player : Ship
 
     public override void Explode(){
         base.Explode();
-        Constants.isAlive = false;
+        GlobalVariables.isAlive = false;
     }
 
     public override GameObject Spawn(string name)
