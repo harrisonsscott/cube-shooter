@@ -669,6 +669,7 @@ MonoBehaviour:
   healthBar: {fileID: 1532507055}
   level: 0
   screenWidth: 0
+  screenHeight: 0
 --- !u!4 &1143916707
 Transform:
   m_ObjectHideFlags: 0

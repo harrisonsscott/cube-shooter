@@ -21,6 +21,8 @@ public class Player : Ship
         
         base.Update();
 
+        transform.position = new Vector3(transform.position.x, -4, transform.position.z);
+
         if (Input.touchCount > 0 && GlobalVariables.isAlive){
             Touch touch = Input.GetTouch(0);
             if (previousTouch == null || touch.phase == TouchPhase.Began){ // touch just started
@@ -59,6 +61,8 @@ public class Player : Ship
         player.bullet = bullet;
         player.maxHealth = maxHealth;
 
+        Rigidbody2D rigidbody = ship.AddComponent<Rigidbody2D>();
+        
         ship.layer = LayerMask.NameToLayer("Player");
 
         return ship;

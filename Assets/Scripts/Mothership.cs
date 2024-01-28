@@ -27,13 +27,15 @@ public class Mothership : MonoBehaviour
     private List<GameObject> blocksGO;
     [Header("Variables")]
     public int level; // how many rows of blocks the player has gone through
-    public float screenWidth; // how far can an object deviate from 0 without going off camera
+    public float screenWidth; // width of the camera's view in world space
+    public float screenHeight; // height of the camera's view in world space
 
     private Gradient gradient;
     private GradientColorKey[] colorKeys;
     private GradientAlphaKey[] alphaKeys;
     private void Start() {
         screenWidth = Camera.main.orthographicSize * Camera.main.aspect;
+        screenHeight = Camera.main.orthographicSize;
         
         // gradient for coloring blocks
         gradient = new Gradient();
@@ -68,8 +70,9 @@ public class Mothership : MonoBehaviour
         blocks = new List<Block>();
         blocksGO = new List<GameObject>();
 
-        // instatiate all the blocks
-        spawnRow();
+        // load in blocks every so often
+        //spawnRow();
+        InvokeRepeating("spawnRow", 2f, Constants.rowTime);
 
     }
 
@@ -80,7 +83,7 @@ public class Mothership : MonoBehaviour
     }
 
     // instantiates a block in the world space
-    public GameObject spawnBlock(string name, Vector3 position){
+    public GameObject spawnBlock(string name, Vector3 position, int health){
         GameObject block = new GameObject(name);
         GameObject text = Instantiate(blockTextTemplate);
 
@@ -93,7 +96,7 @@ public class Mothership : MonoBehaviour
         boxCollider.isTrigger = true;
 
         blockComponent.sprite = blockSprite;
-        blockComponent.health = 65;
+        blockComponent.health = health;
         blockComponent.player = playerGO;
 
         spriteRenderer.sprite = blockSprite;
@@ -117,10 +120,12 @@ public class Mothership : MonoBehaviour
     // adds a row of blocks to the blocks list
     private void spawnRow(){
         for (int i = -(int)Mathf.Floor(screenWidth) - 2; i < screenWidth + 2; i++){
-            GameObject blockGO = spawnBlock("block", new Vector3(i*0.9f, 0, 0));
+            GameObject blockGO = spawnBlock(
+                "block", new Vector3(i*0.9f, screenHeight+1, 0), 2 * GlobalVariables.currentRow + Random.Range(1, 5));
 
             blocksGO.Add(blockGO);
             blocks.Add(blockGO.GetComponent<Block>());
         }
+        GlobalVariables.currentRow += 1;
     }
 }

@@ -31,6 +31,8 @@ public class Block : MonoBehaviour {
             int damage = other.gameObject.GetComponent<Bullet>().damage;
             health -= damage;
             Destroy(other.gameObject); // destroy bullet
+        } else if (LayerMask.LayerToName(other.gameObject.layer) == "Player"){ // destroy player on touch
+            other.gameObject.GetComponent<Player>().Explode();
         }
         
     }
@@ -48,10 +50,6 @@ public class Block : MonoBehaviour {
 
         if (transform.position.y < -10){ // destroy the block when it's passed the player's screen
             Destroy(gameObject);
-        }
-
-        if (transform.position.y < player.transform.position.y + 1){ // destroy the player if the block's too low
-            player.GetComponent<Player>().Explode();
         }
 
         transform.GetChild(0).GetComponent<TMP_Text>().text = health + ""; // update the health display
