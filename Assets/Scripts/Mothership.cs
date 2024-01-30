@@ -17,6 +17,7 @@ public class Mothership : MonoBehaviour
     public GameObject blockTextTemplate; // empty gameobject with TMP_TEXT
     public GameObject bullet; // player bullet GO
     public GameObject bulletRed; // enemy bullet GO
+    public GameObject explosionParticle; // particle system that plays on a ship's death
     public HealthBar healthBar; // background element of the health bar
     private Player player;
     private Enemy enemy;
@@ -29,11 +30,21 @@ public class Mothership : MonoBehaviour
     public int level; // how many rows of blocks the player has gone through
     public float screenWidth; // width of the camera's view in world space
     public float screenHeight; // height of the camera's view in world space
+    private bool hasExploded; // bool to make sure the explosion effect doesn't play twice
 
     private Gradient gradient;
     private GradientColorKey[] colorKeys;
     private GradientAlphaKey[] alphaKeys;
-    private void Start() {
+
+    public void Start(){
+        StartGame();
+    }
+
+    public void StartGame() {
+        CancelInvoke("spawnRow");
+        hasExploded = false;
+        GlobalVariables.currentRow = 0;
+
         screenWidth = Camera.main.orthographicSize * Camera.main.aspect;
         screenHeight = Camera.main.orthographicSize;
         
@@ -77,8 +88,20 @@ public class Mothership : MonoBehaviour
     }
 
     private void Update() {
+            Debug.Log(explosionParticle);
         if (GlobalVariables.isAlive){
+            explosionParticle.transform.position = playerGO.transform.position + new Vector3(0,1,0);
             healthBar.Refresh(player.health / (float)player.maxHealth); // update the player's health bar
+        } else {
+            //play explosion effect on player death
+            if (explosionParticle && !explosionParticle.GetComponent<ParticleSystem>().isPlaying && !hasExploded){
+                hasExploded = true;
+                explosionParticle.SetActive(true);
+                explosionParticle.GetComponent<ParticleSystem>().Play();
+                LeanTween.value(0, 1, 1).setOnComplete(() => {
+                    explosionParticle.SetActive(false);
+                });
+            }
         }
     }
 
