@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Player : Ship
 {
+    public Mothership mothership;
     private Vector2 previousTouch; // the touch position of the last frame
     private GameObject bulletClone;
     private float index;
@@ -43,6 +44,13 @@ public class Player : Ship
     public override void Explode(){
         base.Explode();
         GlobalVariables.isAlive = false;
+
+        // enable/disable UI elements depending on whether or not the player is alive
+        for (int i = 0; i < mothership.enableOnPlay.Count; i++)
+            mothership.enableOnPlay[i].SetActive(false);
+        
+        for (int i = 0; i < mothership.disableOnPlay.Count; i++)
+            mothership.disableOnPlay[i].SetActive(true);
     }
 
     public override GameObject Spawn(string name)

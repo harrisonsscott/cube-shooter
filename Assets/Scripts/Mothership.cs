@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using TMPro;
+using UnityEditor.UI;
 
 // this script handles all the ships
 
@@ -14,6 +15,8 @@ public class Mothership : MonoBehaviour
     public Sprite blockSprite; // just a white square
 
     [Header("Objects")]
+    public List<GameObject> disableOnPlay; // shows in the meu but not the game, ex: shop
+    public List<GameObject> enableOnPlay; // shows in the game but not the menu, ex: health bar
     public GameObject blockTextTemplate; // empty gameobject with TMP_TEXT
     public GameObject bullet; // player bullet GO
     public GameObject bulletRed; // enemy bullet GO
@@ -37,12 +40,23 @@ public class Mothership : MonoBehaviour
     private GradientAlphaKey[] alphaKeys;
 
     public void Start(){
-        StartGame();
+        // StartGame();
     }
 
     public void StartGame() {
+        // enable/disable UI elements depending on whether or not the player is alive
+        for (int i = 0; i < enableOnPlay.Count; i++)
+            enableOnPlay[i].SetActive(true);
+        
+        for (int i = 0; i < disableOnPlay.Count; i++)
+            disableOnPlay[i].SetActive(false);
+
+        if (GlobalVariables.isAlive){ // unable to start a game if the player is still alive
+            return;
+        }
         CancelInvoke("spawnRow");
         hasExploded = false;
+
         GlobalVariables.currentRow = 0;
 
         screenWidth = Camera.main.orthographicSize * Camera.main.aspect;
@@ -71,6 +85,7 @@ public class Mothership : MonoBehaviour
         };
         playerGO = player.Spawn("Player", new Vector3(2, -4, 0), Quaternion.identity); // instantiate the player
         player = playerGO.GetComponent<Player>(); // update the player object to the one used by the GO
+        player.mothership = this; // allow the player to access the mothership
         GlobalVariables.isAlive = true;
         // enemy = new Enemy(enemySprite, player){ // create new enemy object
         //     bullet = bulletRed
@@ -88,7 +103,6 @@ public class Mothership : MonoBehaviour
     }
 
     private void Update() {
-            Debug.Log(explosionParticle);
         if (GlobalVariables.isAlive){
             explosionParticle.transform.position = playerGO.transform.position + new Vector3(0,1,0);
             healthBar.Refresh(player.health / (float)player.maxHealth); // update the player's health bar
