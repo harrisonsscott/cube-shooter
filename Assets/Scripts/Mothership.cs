@@ -18,8 +18,8 @@ public class Mothership : MonoBehaviour
     public List<GameObject> disableOnPlay; // shows in the meu but not the game, ex: shop
     public List<GameObject> enableOnPlay; // shows in the game but not the menu, ex: health bar
     public GameObject blockTextTemplate; // empty gameobject with TMP_TEXT
-    public GameObject bullet; // player bullet GO
-    public GameObject bulletRed; // enemy bullet GO
+    public Sprite bullet; // player bullet GO
+    public Sprite bulletRed; // enemy bullet GO
     public GameObject explosionParticle; // particle system that plays on a ship's death
     public HealthBar healthBar; // background element of the health bar
     private Player player;
@@ -129,7 +129,7 @@ public class Mothership : MonoBehaviour
         Block blockComponent = block.AddComponent<Block>();
         BoxCollider2D boxCollider = block.AddComponent<BoxCollider2D>();
 
-        boxCollider.size = new Vector2(1.3f,1.3f);
+        boxCollider.size = new Vector2(1,1);
         boxCollider.isTrigger = true;
 
         blockComponent.sprite = blockSprite;
@@ -139,7 +139,7 @@ public class Mothership : MonoBehaviour
         spriteRenderer.sprite = blockSprite;
         spriteRenderer.color = gradient.Evaluate(blockComponent.health / 100f); // color based on health
 
-        block.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+        block.transform.localScale = new Vector3(0.7f,0.7f,0.7f);
         block.transform.position = position;
         block.transform.parent = transform;
 
@@ -158,7 +158,7 @@ public class Mothership : MonoBehaviour
     private void spawnRow(){
         for (int i = -(int)Mathf.Floor(screenWidth) - 2; i < screenWidth + 2; i++){
             GameObject blockGO = spawnBlock(
-                "block", new Vector3(i*0.9f, screenHeight+1, 0), 2 * GlobalVariables.currentRow + Random.Range(1, 5));
+                "block", new Vector3(i*0.9f, screenHeight+1, 0), (int)(GlobalVariables.currentRow/5) + Random.Range(1, 5));
 
             blocksGO.Add(blockGO);
             blocks.Add(blockGO.GetComponent<Block>());

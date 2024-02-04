@@ -12,7 +12,7 @@ public class Ship : MonoBehaviour
     public int damage;
     public float bulletSpeed; // how fast the bullets are
     public float reloadSpeed; // how fast the ship can shoot another bullet 
-    public GameObject bullet;
+    public Sprite bullet;
     public Sprite sprite;
 
     private GameObject bulletClone;
@@ -28,7 +28,7 @@ public class Ship : MonoBehaviour
         maxHealth = health;
     }
 
-    public Ship(int health, int damage, float bulletSpeed, float reloadSpeed, GameObject bullet, Sprite sprite){
+    public Ship(int health, int damage, float bulletSpeed, float reloadSpeed, Sprite bullet, Sprite sprite){
         this.health = health;
         this.damage = damage;
         this.bullet = bullet;
@@ -46,13 +46,24 @@ public class Ship : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, Mathf.Infinity, layerMask);
 
         if (hit.collider != null){ // raycast hit something, start shooting
-            bulletClone = Instantiate(bullet);
-            bulletClone.transform.position = transform.position; // set bullet position to ship
-            bulletClone.transform.parent = gameObject.transform;
+            Bullet bulletObject = new Bullet(bullet);
             
-            LeanTween.move(bulletClone, transform.position + transform.up * 10, 1/bulletSpeed).setOnComplete(() => {
-                Destroy(bulletClone); // destroy bullet when done
-            });
+            bulletClone = bulletObject.Spawn();
+
+            // bulletClone.transform.position = transform.position; // set bullet position to ship
+            // bulletClone.transform.parent = gameObject.transform;
+            
+            // bulletClone.transform.position += new Vector3(0, Time.deltaTime * reloadSpeed * transform.up.y, 0); // move the bullet up (according to the ship)
+
+            // LeanTween.value(0, 10, 5).setOnUpdate((float a) => {
+                // if (bulletClone){
+                    // bulletClone.transform.position = new Vector3(transform.position.x, (transform.position.y + a) * transform.up.y, 0);
+                // }
+                // 
+            // }).setOnComplete(() => {
+                // if (bulletClone)
+                    // Destroy(bulletClone);
+            // });
 
             // if the bullet hits anything, it'll trigger OnTriggerEnter2D
             return 1;
@@ -84,9 +95,9 @@ public class Ship : MonoBehaviour
 
         index += Time.deltaTime; // timer
 
-        if (index > reloadSpeed  && GlobalVariables.isAlive){ // shoot every so often
-            if (Shoot() == 1) // if the ship shot a bullet, reset the timer
-                index = 0;
+        if (index > reloadSpeed/3f){ // shoot every so often
+            index = 0;
+            Shoot();
         }
     }
 
@@ -104,7 +115,7 @@ public class Ship : MonoBehaviour
         boxCollider.size = new Vector2(5,5); // set collider size  
 
         // set transform data
-        ship.transform.localScale = new Vector3(0.2f,0.2f,0.2f);
+        ship.transform.localScale = new Vector3(0.13f,0.13f,0.13f);
         ship.transform.position = position;
         ship.transform.rotation = rotation;
 
