@@ -71,6 +71,7 @@ public class Player : Ship
         player.maxHealth = maxHealth;
 
         Rigidbody2D rigidbody = ship.AddComponent<Rigidbody2D>();
+        rigidbody.freezeRotation = true;
         
         ship.layer = LayerMask.NameToLayer("Player");
 

@@ -96,13 +96,6 @@ public class Ship : MonoBehaviour
         if (health <= 0 && GlobalVariables.isAlive){ // explode if health is 0 or less
             Explode();
         }
-
-        // index += Time.deltaTime; // timer
-
-        // if (index > reloadSpeed/3f){ // shoot every so often
-        //     index = 0;
-        //     Shoot();
-        // }
     }
 
     public virtual GameObject Spawn(string name){

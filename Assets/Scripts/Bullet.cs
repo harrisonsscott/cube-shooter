@@ -1,4 +1,3 @@
-using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour {
@@ -43,10 +42,11 @@ public class Bullet : MonoBehaviour {
         CircleCollider2D collider = bullet.AddComponent<CircleCollider2D>();
         collider.radius = 1.28f;
 
-        bullet.AddComponent<Rigidbody2D>();
+        Rigidbody2D rigidbody = bullet.AddComponent<Rigidbody2D>();
+        rigidbody.gravityScale = 0;
 
         bullet.layer = LayerMask.NameToLayer("Bullet");
-        
+
         return bullet;
     }    
 }

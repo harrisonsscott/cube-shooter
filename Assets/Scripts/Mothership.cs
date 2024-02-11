@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using TMPro;
-using UnityEditor.UI;
 
 // this script handles all the ships
 
