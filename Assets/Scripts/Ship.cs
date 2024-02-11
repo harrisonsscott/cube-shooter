@@ -39,6 +39,9 @@ public class Ship : MonoBehaviour
         maxHealth = health;
     }
 
+    private void Start() {
+        InvokeRepeating("Shoot", 1, reloadSpeed); // player will shoot every so often
+    }
 
     public virtual int Shoot(){ // sends a raycast out, and shoots if it hits something
         int layerMask = ~(1 << gameObject.layer | 1 << LayerMask.NameToLayer("Bullet")); // everything but ship layer and bullet layer
@@ -48,7 +51,7 @@ public class Ship : MonoBehaviour
         if (hit.collider != null){ // raycast hit something, start shooting
             Bullet bulletObject = new Bullet(bullet);
             
-            bulletClone = bulletObject.Spawn();
+            bulletClone = bulletObject.Spawn("bullet", transform.position + new Vector3(0, 0.5f, 0), quaternion.identity);
 
             // bulletClone.transform.position = transform.position; // set bullet position to ship
             // bulletClone.transform.parent = gameObject.transform;
@@ -74,6 +77,7 @@ public class Ship : MonoBehaviour
 
     public virtual void Explode(){ // automatically called when the ship dies
         Destroy(gameObject);
+        CancelInvoke("Shoot");
         Debug.Log("boom!");
     }
 
@@ -93,12 +97,12 @@ public class Ship : MonoBehaviour
             Explode();
         }
 
-        index += Time.deltaTime; // timer
+        // index += Time.deltaTime; // timer
 
-        if (index > reloadSpeed/3f){ // shoot every so often
-            index = 0;
-            Shoot();
-        }
+        // if (index > reloadSpeed/3f){ // shoot every so often
+        //     index = 0;
+        //     Shoot();
+        // }
     }
 
     public virtual GameObject Spawn(string name){

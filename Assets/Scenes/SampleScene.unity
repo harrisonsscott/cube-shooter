@@ -1071,8 +1071,8 @@ MonoBehaviour:
   enableOnPlay:
   - {fileID: 1532507051}
   blockTextTemplate: {fileID: 520844754}
-  bullet: {fileID: 2144494453}
-  bulletRed: {fileID: 1186723722}
+  bullet: {fileID: 21300000, guid: 45c9071b547287db39ea17ab03ee28f6, type: 3}
+  bulletRed: {fileID: 21300000, guid: 45c9071b547287db39ea17ab03ee28f6, type: 3}
   explosionParticle: {fileID: 1425556998}
   healthBar: {fileID: 1532507055}
   level: 0
@@ -1126,6 +1126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 3
+  sprite: {fileID: 0}
 --- !u!50 &1186723724
 Rigidbody2D:
   serializedVersion: 4
@@ -6649,6 +6650,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 3
+  sprite: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -87,6 +87,7 @@ public class Mothership : MonoBehaviour
         player = playerGO.GetComponent<Player>(); // update the player object to the one used by the GO
         player.mothership = this; // allow the player to access the mothership
         GlobalVariables.isAlive = true;
+
         // enemy = new Enemy(enemySprite, player){ // create new enemy object
         //     bullet = bulletRed
         // };
@@ -129,7 +130,7 @@ public class Mothership : MonoBehaviour
         Block blockComponent = block.AddComponent<Block>();
         BoxCollider2D boxCollider = block.AddComponent<BoxCollider2D>();
 
-        boxCollider.size = new Vector2(1,1);
+        boxCollider.size = new Vector2(1.3f,1.3f);
         boxCollider.isTrigger = true;
 
         blockComponent.sprite = blockSprite;
