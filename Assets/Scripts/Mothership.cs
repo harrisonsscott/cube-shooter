@@ -129,7 +129,7 @@ public class Mothership : MonoBehaviour
         Block blockComponent = block.AddComponent<Block>();
         BoxCollider2D boxCollider = block.AddComponent<BoxCollider2D>();
 
-        boxCollider.size = new Vector2(1.3f,1.3f);
+        boxCollider.size = new Vector2(1.2f,1.2f);
         boxCollider.isTrigger = true;
 
         blockComponent.sprite = blockSprite;
@@ -137,7 +137,7 @@ public class Mothership : MonoBehaviour
         blockComponent.player = playerGO;
 
         spriteRenderer.sprite = blockSprite;
-        spriteRenderer.color = gradient.Evaluate(blockComponent.health / 100f); // color based on health
+        spriteRenderer.color = gradient.Evaluate(blockComponent.health / 30f); // color based on health
 
         block.transform.localScale = new Vector3(0.7f,0.7f,0.7f);
         block.transform.position = position;

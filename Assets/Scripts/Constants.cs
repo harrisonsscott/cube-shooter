@@ -1,12 +1,12 @@
 public static class Constants {
     #if UNITY_EDITOR
-
-    public static float gravity = 1f; // how fast everything falls per second
-    public static float rowTime = 2f; // how quickly a block row spawns after the other
+    // debug mode
+    public static float gravity = 0.75f; // how fast everything falls per second
+    public static float rowTime = 10f; // how quickly a block row spawns after the other
     public static bool debugMode = true; // makes the player overpowered (only in editor)
     
     #else
-    // normal
+    // release mode
     public static float gravity = 0.5f;
     public static float rowTime = 10f;
     public static bool debugMode = false;
