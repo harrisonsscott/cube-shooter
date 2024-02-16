@@ -12,6 +12,7 @@ public class Mothership : MonoBehaviour
     public Sprite playerSprite; // player ship sprite
     public Sprite enemySprite; // enemy ship sprite
     public Sprite blockSprite; // just a white square
+    public Sprite coinSprite;
 
     [Header("Objects")]
     public List<GameObject> disableOnPlay; // shows in the meu but not the game, ex: shop
@@ -135,6 +136,7 @@ public class Mothership : MonoBehaviour
         blockComponent.sprite = blockSprite;
         blockComponent.health = health;
         blockComponent.player = playerGO;
+        blockComponent.coinSprite = coinSprite;
 
         spriteRenderer.sprite = blockSprite;
         spriteRenderer.color = gradient.Evaluate(blockComponent.health / 30f); // color based on health

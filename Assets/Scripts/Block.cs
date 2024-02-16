@@ -4,22 +4,28 @@ using UnityEngine;
 public class Block : MonoBehaviour {
     public int health;
     public Sprite sprite;
+    public Sprite coinSprite;
     public GameObject player;
 
-    public Block(Sprite sprite, GameObject player){
+    public Block(Sprite sprite, GameObject player, Sprite coinSprite){
         this.sprite = sprite;
         this.player = player;
+        this.coinSprite = coinSprite;
 
         health = 5;
     }
 
-    public Block(int health, Sprite sprite, GameObject player){
+    public Block(int health, Sprite sprite, GameObject player, Sprite coinSprite){
         this.health = health;
         this.sprite = sprite;
         this.player = player;
+        this.coinSprite = coinSprite;
     }
 
     public void Explode(){ // automatically called when block dies
+        Coin coin = new Coin(1, coinSprite); // spawn coin on death
+        coin.Spawn(transform.position);
+
         Destroy(gameObject);
     }
 
