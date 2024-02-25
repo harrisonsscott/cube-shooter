@@ -1213,6 +1213,7 @@ MonoBehaviour:
   bulletRed: {fileID: 21300000, guid: 45c9071b547287db39ea17ab03ee28f6, type: 3}
   explosionParticle: {fileID: 1425556998}
   healthBar: {fileID: 1532507055}
+  coinsDisplay: {fileID: 722873513}
   level: 0
   screenWidth: 0
   screenHeight: 0

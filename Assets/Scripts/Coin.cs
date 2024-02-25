@@ -55,6 +55,8 @@ public class Coin : MonoBehaviour {
         collider.radius = 0.16f;
         collider.isTrigger = true;
 
+        coin.layer = LayerMask.NameToLayer("Coin");
+
         return coin;
     }
 }

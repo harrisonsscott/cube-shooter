@@ -40,6 +40,7 @@ public class Bullet : MonoBehaviour {
         bullet1.damage = damage;
 
         CircleCollider2D collider = bullet.AddComponent<CircleCollider2D>();
+        collider.excludeLayers = 1 << LayerMask.NameToLayer("Coin"); // exclude coin layer
         collider.radius = 1.28f;
 
         Rigidbody2D rigidbody = bullet.AddComponent<Rigidbody2D>();
