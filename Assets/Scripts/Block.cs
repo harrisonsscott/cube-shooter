@@ -54,7 +54,7 @@ public class Block : MonoBehaviour {
             Explode();
         }
 
-        if (transform.position.y < -10){ // destroy the block when it's passed the player's screen
+        if (transform.position.y < -Camera.main.orthographicSize){ // destroy the block when it's passed the player's screen
             Destroy(gameObject);
         }
 
