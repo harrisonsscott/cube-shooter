@@ -21,7 +21,6 @@ public class Mothership : MonoBehaviour
     public Sprite bullet; // player bullet GO
     public Sprite bulletRed; // enemy bullet GO
     public GameObject explosionParticle; // particle system that plays on a ship's death
-    public HealthBar healthBar; // background element of the health bar
     public TMP_Text coinsDisplay; // text in the top right corner that displays the amount of coins the player has
     private Player player;
     private Enemy enemy;
@@ -107,7 +106,6 @@ public class Mothership : MonoBehaviour
     private void Update() {
         if (GlobalVariables.isAlive){
             explosionParticle.transform.position = playerGO.transform.position + new Vector3(0,1,0);
-            healthBar.Refresh(player.health / (float)player.maxHealth); // update the player's health bar
             coinsDisplay.text = "Coins: " + player.coins;
         } else {
             //play explosion effect on player death
@@ -132,7 +130,7 @@ public class Mothership : MonoBehaviour
         Block blockComponent = block.AddComponent<Block>();
         BoxCollider2D boxCollider = block.AddComponent<BoxCollider2D>();
 
-        boxCollider.size = new Vector2(1.2f,1.2f);
+        boxCollider.size = new Vector2(1,1);
         boxCollider.isTrigger = true;
 
         blockComponent.sprite = blockSprite;
