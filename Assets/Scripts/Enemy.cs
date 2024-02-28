@@ -31,7 +31,7 @@ public class Enemy : Ship
         enemy.health = health;
         enemy.damage = damage;
         enemy.bulletSpeed = bulletSpeed;
-        enemy.reloadSpeed = reloadSpeed;
+        enemy.fireRate = fireRate;
         enemy.bullet = bullet;
 
         ship.layer = LayerMask.NameToLayer("Enemy");

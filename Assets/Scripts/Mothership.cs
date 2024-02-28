@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using TMPro;
+using Unity.Mathematics;
 
 // this script handles all the ships
 
@@ -15,6 +16,8 @@ public class Mothership : MonoBehaviour
     public Sprite coinSprite;
 
     [Header("Objects")]
+    public GameObject fireRateButton; // upgrade button in menu
+    public GameObject damageButton; // upgrade button in menu
     public List<GameObject> disableOnPlay; // shows in the meu but not the game, ex: shop
     public List<GameObject> enableOnPlay; // shows in the game but not the menu, ex: health bar
     public GameObject blockTextTemplate; // empty gameobject with TMP_TEXT
@@ -38,6 +41,12 @@ public class Mothership : MonoBehaviour
     private Gradient gradient;
     private GradientColorKey[] colorKeys;
     private GradientAlphaKey[] alphaKeys;
+
+    // some of the player stats are stored in the mothership so they don't reset on death
+    [SerializeField]
+    private int damage;
+    [SerializeField]
+    private int fireRate;
 
     public void Start(){
         // StartGame();
@@ -83,9 +92,12 @@ public class Mothership : MonoBehaviour
         player = new Player(playerSprite){ // create new player object
             bullet = bullet
         };
+
         playerGO = player.Spawn("Player", new Vector3(2, -4, 0), Quaternion.identity); // instantiate the player
         player = playerGO.GetComponent<Player>(); // update the player object to the one used by the GO
         player.mothership = this; // allow the player to access the mothership
+        player.damage = math.max(damage, 1); // make the damage >1
+        player.fireRate = math.max(fireRate, 1); // make the firerate >1
         GlobalVariables.isAlive = true;
 
         // enemy = new Enemy(enemySprite, player){ // create new enemy object
@@ -160,11 +172,21 @@ public class Mothership : MonoBehaviour
     private void spawnRow(){
         for (int i = -(int)Mathf.Floor(screenWidth) - 2; i < screenWidth + 2; i++){
             GameObject blockGO = spawnBlock(
-                "block", new Vector3(i*0.9f, screenHeight+1, 0), (int)(GlobalVariables.currentRow/5) + Random.Range(1, 5));
+                "block", new Vector3(i*0.9f, screenHeight+1, 0), (int)(GlobalVariables.currentRow/5) + UnityEngine.Random.Range(1, 5));
 
             blocksGO.Add(blockGO);
             blocks.Add(blockGO.GetComponent<Block>());
         }
         GlobalVariables.currentRow += 1;
+    }
+    public void LevelUp(string type){ // called by the Fire Rate/Damage upgrade buttons in the menu
+        switch (type){
+            case "firerate":
+                fireRate += 1;
+                break;
+            case "damage":
+                damage += 1;
+                break;
+        }
     }
 }

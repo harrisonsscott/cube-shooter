@@ -11,7 +11,7 @@ public class Ship : MonoBehaviour
     public int maxHealth; // automatically set to health at the start
     public int damage;
     public float bulletSpeed; // how fast the bullets are
-    public float reloadSpeed; // how fast the ship can shoot another bullet 
+    public float fireRate; // bullets shot per second 
     public Sprite bullet;
     public Sprite sprite;
 
@@ -23,24 +23,24 @@ public class Ship : MonoBehaviour
         health = 10;
         damage = 1;
         bulletSpeed = 1;
-        reloadSpeed = 1;
+        fireRate = 1;
 
         maxHealth = health;
     }
 
-    public Ship(int health, int damage, float bulletSpeed, float reloadSpeed, Sprite bullet, Sprite sprite){
+    public Ship(int health, int damage, float bulletSpeed, float fireRate, Sprite bullet, Sprite sprite){
         this.health = health;
         this.damage = damage;
         this.bullet = bullet;
         this.bulletSpeed = bulletSpeed;
-        this.reloadSpeed = reloadSpeed;
+        this.fireRate = fireRate;
         this.sprite = sprite;
 
         maxHealth = health;
     }
 
     private void Start() {
-        InvokeRepeating("Shoot", 1, reloadSpeed); // player will shoot every so often
+        InvokeRepeating("Shoot", 1, 1/fireRate); // player will shoot every so often
     }
 
     public virtual int Shoot(){ // sends a raycast out, and shoots if it hits something
@@ -48,15 +48,16 @@ public class Ship : MonoBehaviour
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, Mathf.Infinity, layerMask);
 
-        if (hit.collider != null){ // raycast hit something, start shooting
+        //if (hit.collider != null){ // raycast hit something, start shooting
             Bullet bulletObject = new Bullet(bullet);
             
             bulletClone = bulletObject.Spawn("bullet", transform.position + new Vector3(0, 0.5f, 0), quaternion.identity);
-
+            bulletClone.GetComponent<Bullet>().damage = damage;
+            
             // bulletClone.transform.position = transform.position; // set bullet position to ship
             // bulletClone.transform.parent = gameObject.transform;
             
-            // bulletClone.transform.position += new Vector3(0, Time.deltaTime * reloadSpeed * transform.up.y, 0); // move the bullet up (according to the ship)
+            // bulletClone.transform.position += new Vector3(0, Time.deltaTime * fireRate * transform.up.y, 0); // move the bullet up (according to the ship)
 
             // LeanTween.value(0, 10, 5).setOnUpdate((float a) => {
                 // if (bulletClone){
@@ -70,9 +71,9 @@ public class Ship : MonoBehaviour
 
             // if the bullet hits anything, it'll trigger OnTriggerEnter2D
             return 1;
-        } else {
-            return 0;
-        }
+        // } else {
+        //     return 0;
+        // }
     }
 
     public virtual void Explode(){ // automatically called when the ship dies
