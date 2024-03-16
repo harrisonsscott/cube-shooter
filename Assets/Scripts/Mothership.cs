@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using TMPro;
 using Unity.Mathematics;
+using System;
 
 // this script handles all the ships
 
@@ -33,6 +34,8 @@ public class Mothership : MonoBehaviour
     private GameObject enemyGO;
     private List<GameObject> blocksGO;
     [Header("Variables")]
+    [SerializeField]
+    public double coins;
     public int level; // how many rows of blocks the player has gone through
     public float screenWidth; // width of the camera's view in world space
     public float screenHeight; // height of the camera's view in world space
@@ -49,7 +52,16 @@ public class Mothership : MonoBehaviour
     private int fireRate;
 
     public void Start(){
-        // StartGame();
+        // implement data fetching logic here
+        damage = 0;
+        fireRate = 0;
+
+        // Refresh the GUI after fetching data
+        Purchase(0);
+        fireRateButton.transform.GetChild(1).GetComponent<TMP_Text>().text = "Level " + fireRate;
+        fireRateButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "$" + GlobalFunctions.abbreviate(Math.Pow(2, fireRate));
+        damageButton.transform.GetChild(1).GetComponent<TMP_Text>().text = "Level " + damage;
+        damageButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "$" + GlobalFunctions.abbreviate(Math.Pow(2, damage));
     }
 
     public void StartGame() {
@@ -118,7 +130,7 @@ public class Mothership : MonoBehaviour
     private void Update() {
         if (GlobalVariables.isAlive){
             explosionParticle.transform.position = playerGO.transform.position + new Vector3(0,1,0);
-            coinsDisplay.text = "Coins: " + player.coins;
+            coinsDisplay.text = "Coins: " + coins;
         } else {
             //play explosion effect on player death
             if (explosionParticle && !explosionParticle.GetComponent<ParticleSystem>().isPlaying && !hasExploded){
@@ -179,13 +191,34 @@ public class Mothership : MonoBehaviour
         }
         GlobalVariables.currentRow += 1;
     }
+
+    public bool Purchase(double cost){ // returns false if the player doesn't have the money, and subtract the money and return true if the player does
+        if (cost > coins)
+            return false;
+        coins -= cost;
+        coinsDisplay.text = "Coins: " + coins;
+        return true;
+    }
+
     public void LevelUp(string type){ // called by the Fire Rate/Damage upgrade buttons in the menu
+        double cost;
         switch (type){
             case "firerate":
-                fireRate += 1;
+                cost = Math.Pow(2, fireRate);
+                if (Purchase(cost)){
+                    fireRate += 1;
+                    fireRateButton.transform.GetChild(1).GetComponent<TMP_Text>().text = "Level " + fireRate;
+                    fireRateButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "$" + GlobalFunctions.abbreviate(Math.Pow(2, fireRate));
+                }
+                
                 break;
             case "damage":
-                damage += 1;
+                cost = Math.Pow(2, damage);
+                if (Purchase(cost)){
+                    damage += 1;
+                    damageButton.transform.GetChild(1).GetComponent<TMP_Text>().text = "Level " + damage;
+                    damageButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "$" + GlobalFunctions.abbreviate(Math.Pow(2, damage));
+                }
                 break;
         }
     }

@@ -30,7 +30,7 @@ public class Coin : MonoBehaviour {
 
         float tweenTime = Mathf.Sqrt(screenWidth + screenHeight)/4; // tween moves a uniform amount every second
         LeanTween.move(gameObject, new Vector3(screenWidth,screenHeight,0), tweenTime).setOnComplete(() => {
-            player.GetComponent<Player>().coins += value;
+            player.GetComponent<Player>().mothership.coins += value;
             Destroy(gameObject);
         });
     }

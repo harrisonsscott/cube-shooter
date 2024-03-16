@@ -13,7 +13,10 @@ public static class GlobalFunctions {
             index += 1;
         }
         
-        return num + abbreviations[index];
-        
+        return num + abbreviations[index];  
+    }
+
+    public static string abbreviate(double number){
+        return abbreviate((long)number);
     }
 }

@@ -6,13 +6,11 @@ using UnityEngine.UI;
 public class Player : Ship
 {
     public Mothership mothership;
-    public int coins;
     private Vector2 previousTouch; // the touch position of the last frame
     private GameObject bulletClone;
     private float index;
     public Player(Sprite sprite) : base(sprite) {
         this.sprite = sprite;
-        coins = 0;
 
         if (Application.isEditor && Constants.debugMode){ // debug mode
             health = 1000;
