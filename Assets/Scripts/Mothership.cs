@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using Unity.Mathematics;
 using System;
+using System.Runtime.InteropServices;
 
 // this script handles all the ships
 
@@ -37,7 +38,9 @@ public class Mothership : MonoBehaviour
     [SerializeField]
     public double coins;
     public int level; // how many rows of blocks the player has gone through
+    [SerializeField]
     public float screenWidth; // width of the camera's view in world space
+    [SerializeField]
     public float screenHeight; // height of the camera's view in world space
     private bool hasExploded; // bool to make sure the explosion effect doesn't play twice
 
@@ -145,7 +148,7 @@ public class Mothership : MonoBehaviour
     }
 
     // instantiates a block in the world space
-    public GameObject spawnBlock(string name, Vector3 position, int health){
+    public GameObject spawnBlock(string name, Vector3 position, Vector3 size, int health){
         GameObject block = new GameObject(name);
         GameObject text = Instantiate(blockTextTemplate);
 
@@ -165,7 +168,7 @@ public class Mothership : MonoBehaviour
         spriteRenderer.sprite = blockSprite;
         spriteRenderer.color = gradient.Evaluate(blockComponent.health / 30f); // color based on health
 
-        block.transform.localScale = new Vector3(0.7f,0.7f,0.7f);
+        block.transform.localScale = size;
         block.transform.position = position;
         block.transform.parent = transform;
 
@@ -182,10 +185,21 @@ public class Mothership : MonoBehaviour
 
     // adds a row of blocks to the blocks list
     private void spawnRow(){
-        for (int i = -(int)Mathf.Floor(screenWidth) - 2; i < screenWidth + 2; i++){
-            GameObject blockGO = spawnBlock(
-                "block", new Vector3(i*0.9f, screenHeight+1, 0), (int)(GlobalVariables.currentRow/5) + UnityEngine.Random.Range(1, 5));
+        // for (int i = -(int)Mathf.Floor(screenWidth) - 2; i < screenWidth + 2; i++){
+        //     GameObject blockGO = spawnBlock(
+        //         "block", new Vector3(i*0.9f, screenHeight+1, 0), (int)(GlobalVariables.currentRow/5) + UnityEngine.Random.Range(1, 5));
 
+        //     blocksGO.Add(blockGO);
+        //     blocks.Add(blockGO.GetComponent<Block>());
+        // }
+        for (int i = 0; i < Constants.blocksPerRow; i++){
+            Vector3 size = new Vector3(screenWidth/Constants.blocksPerRow*2f, screenWidth/Constants.blocksPerRow*2f, 1);
+            Debug.Log(screenWidth);
+            GameObject blockGO = spawnBlock(
+                "block", 
+                new Vector3(i * size.x - screenWidth + size.x/2, screenHeight+1, 0),
+                size,
+                GlobalVariables.currentRow / 5 + UnityEngine.Random.Range(1, 5));
             blocksGO.Add(blockGO);
             blocks.Add(blockGO.GetComponent<Block>());
         }

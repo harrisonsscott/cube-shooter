@@ -12,6 +12,6 @@ public static class Constants {
     public static bool debugMode = false;
     #endif
 
-    public static float blockSize = 0.7f;
+    public static int blocksPerRow = 5;
     
 }
