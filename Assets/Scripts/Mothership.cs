@@ -26,6 +26,7 @@ public class Mothership : MonoBehaviour
     public Sprite bullet; // player bullet GO
     public Sprite bulletRed; // enemy bullet GO
     public GameObject explosionParticle; // particle system that plays on a ship's death
+    public TMP_Text scoreDisplay; // text that displays the player's high score
     public TMP_Text coinsDisplay; // text in the top right corner that displays the amount of coins the player has
     private Player player;
     private Enemy enemy;
@@ -37,6 +38,9 @@ public class Mothership : MonoBehaviour
     [Header("Variables")]
     [SerializeField]
     public double coins;
+    [SerializeField]
+    // how scoring works: you get 1 point per block you don't destroy, but you get [row number + 1] amount of points if you do destroy it.
+    public double score;
     public int level; // how many rows of blocks the player has gone through
     [SerializeField]
     public float screenWidth; // width of the camera's view in world space
@@ -55,6 +59,12 @@ public class Mothership : MonoBehaviour
     private int fireRate;
 
     public void Start(){
+        for (int i = 0; i < enableOnPlay.Count; i++)
+            enableOnPlay[i].SetActive(false);
+        
+        for (int i = 0; i < disableOnPlay.Count; i++)
+            disableOnPlay[i].SetActive(true);
+    
         // implement data fetching logic here
         damage = 0;
         fireRate = 0;
@@ -68,6 +78,9 @@ public class Mothership : MonoBehaviour
     }
 
     public void StartGame() {
+        
+        score = 0;
+
         // enable/disable UI elements depending on whether or not the player is alive
         for (int i = 0; i < enableOnPlay.Count; i++)
             enableOnPlay[i].SetActive(true);
@@ -134,6 +147,7 @@ public class Mothership : MonoBehaviour
         if (GlobalVariables.isAlive){
             explosionParticle.transform.position = playerGO.transform.position + new Vector3(0,1,0);
             coinsDisplay.text = "Coins: " + coins;
+            scoreDisplay.text = "Score: \n" + GlobalFunctions.abbreviate(score);
         } else {
             //play explosion effect on player death
             if (explosionParticle && !explosionParticle.GetComponent<ParticleSystem>().isPlaying && !hasExploded){
@@ -199,7 +213,7 @@ public class Mothership : MonoBehaviour
                 "block", 
                 new Vector3(i * size.x - screenWidth + size.x/2, screenHeight+1, 0),
                 size,
-                GlobalVariables.currentRow / 5 + UnityEngine.Random.Range(1, 5));
+                GlobalVariables.currentRow / 2 + UnityEngine.Random.Range(1, 5));
             blocksGO.Add(blockGO);
             blocks.Add(blockGO.GetComponent<Block>());
         }

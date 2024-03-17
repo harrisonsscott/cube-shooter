@@ -7,8 +7,8 @@ public static class Constants {
     
     #else
     // release mode
-    public static float gravity = 0.5f;
-    public static float rowTime = 10f;
+    public static float gravity = 3f;
+    public static float rowTime = 6f;
     public static bool debugMode = false;
     #endif
 

@@ -51,10 +51,12 @@ public class Block : MonoBehaviour {
         transform.position -= new Vector3(0, Time.deltaTime * Constants.gravity, 0); // slowly descend
 
         if (health <= 0){ // explode if health is 0 or less
+            player.GetComponent<Player>().mothership.score += GlobalVariables.currentRow + 1;
             Explode();
         }
 
         if (transform.position.y < -Camera.main.orthographicSize){ // destroy the block when it's passed the player's screen
+            player.GetComponent<Player>().mothership.score += 1;
             Destroy(gameObject);
         }
 
