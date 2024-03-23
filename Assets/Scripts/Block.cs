@@ -48,7 +48,8 @@ public class Block : MonoBehaviour {
             Destroy(gameObject);
             return;
         }
-        transform.position -= new Vector3(0, Time.deltaTime * Constants.gravity, 0); // slowly descend
+        if (!GlobalVariables.isPaused)
+            transform.position -= new Vector3(0, Time.deltaTime * Constants.gravity, 0); // slowly descend
 
         if (health <= 0){ // explode if health is 0 or less
             player.GetComponent<Player>().mothership.score += GlobalVariables.currentRow + 1;

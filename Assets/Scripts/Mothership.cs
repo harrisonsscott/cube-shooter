@@ -199,6 +199,8 @@ public class Mothership : MonoBehaviour
 
     // adds a row of blocks to the blocks list
     private void spawnRow(){
+        if (GlobalVariables.isPaused)
+            return;
         // for (int i = -(int)Mathf.Floor(screenWidth) - 2; i < screenWidth + 2; i++){
         //     GameObject blockGO = spawnBlock(
         //         "block", new Vector3(i*0.9f, screenHeight+1, 0), (int)(GlobalVariables.currentRow/5) + UnityEngine.Random.Range(1, 5));
@@ -213,7 +215,7 @@ public class Mothership : MonoBehaviour
                 "block", 
                 new Vector3(i * size.x - screenWidth + size.x/2, screenHeight+1, 0),
                 size,
-                GlobalVariables.currentRow / 2 + UnityEngine.Random.Range(1, 5));
+                (int)(GlobalVariables.currentRow * 1.5f + UnityEngine.Random.Range(1, 5)));
             blocksGO.Add(blockGO);
             blocks.Add(blockGO.GetComponent<Block>());
         }

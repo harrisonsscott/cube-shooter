@@ -16,7 +16,8 @@ public class Bullet : MonoBehaviour {
     }
 
     private void Update() {
-        transform.position += new Vector3(0, Time.deltaTime*2f, 0);
+        if (!GlobalVariables.isPaused)
+            transform.position += new Vector3(0, Time.deltaTime*5f, 0);
     }
 
     public GameObject Spawn(){

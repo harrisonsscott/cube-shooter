@@ -60,7 +60,11 @@ sysinfo.txt
 
 # Builds
 *.apk
+*.aab
 *.unitypackage
+
+# Keystores
+*.keystore
 
 # Crashlytics generated file
 crashlytics-build.properties

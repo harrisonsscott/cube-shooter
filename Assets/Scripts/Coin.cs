@@ -20,7 +20,9 @@ public class Coin : MonoBehaviour {
             Destroy(gameObject);
             return;
         }
-        transform.position -= new Vector3(0, Time.deltaTime * Constants.gravity / 2, 0); // slowly descend (slower than gravity to make them easier to collect)
+        if (!GlobalVariables.isAlive){
+            transform.position -= new Vector3(0, Time.deltaTime * Constants.gravity / 2, 0); // slowly descend (slower than gravity to make them easier to collect)
+        }
     }
 
     public void Collect(GameObject player){ // coin moves off the screen and is given to the player

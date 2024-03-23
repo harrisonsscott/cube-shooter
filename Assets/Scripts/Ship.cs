@@ -44,6 +44,8 @@ public class Ship : MonoBehaviour
     }
 
     public virtual int Shoot(){ // sends a raycast out, and shoots if it hits something
+        if (GlobalVariables.isPaused)
+            return 0;
         int layerMask = ~(1 << gameObject.layer | 1 << LayerMask.NameToLayer("Bullet")); // everything but ship layer and bullet layer
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, Mathf.Infinity, layerMask);
