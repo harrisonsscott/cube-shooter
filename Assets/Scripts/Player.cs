@@ -46,6 +46,10 @@ public class Player : Ship
 
     public override void Explode(){
         base.Explode();
+        
+        Audio audio = FindAnyObjectByType<Audio>();
+        audio.Play(audio.hit);
+
         GlobalVariables.isAlive = false;
 
         // enable/disable UI elements depending on whether or not the player is alive

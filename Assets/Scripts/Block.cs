@@ -23,6 +23,9 @@ public class Block : MonoBehaviour {
     }
 
     public void Explode(){ // automatically called when block dies
+        Audio audio = FindAnyObjectByType<Audio>();
+        audio.Play(audio.pop);
+
         Coin coin = new Coin(1, coinSprite); // spawn coin on death
         coin.Spawn(transform.position);
 

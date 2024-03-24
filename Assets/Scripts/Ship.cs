@@ -51,6 +51,9 @@ public class Ship : MonoBehaviour
         // int layerMask = ~(1 << gameObject.layer | 1 << LayerMask.NameToLayer("Bullet")); // everything but ship layer and bullet layer
         // RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, Mathf.Infinity, layerMask);
 
+        Audio audio = FindAnyObjectByType<Audio>();
+        audio.Play(audio.shoot);
+
         Bullet bulletObject = new Bullet(bullet);
             
         bulletClone = bulletObject.Spawn(

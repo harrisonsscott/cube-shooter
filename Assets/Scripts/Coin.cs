@@ -27,6 +27,9 @@ public class Coin : MonoBehaviour {
 
     public void Collect(GameObject player){ // coin moves off the screen and is given to the player
         // Destroy(gameObject.GetComponent<CircleCollider2D>()); // remove collider to prevent calling this function more than once
+        Audio audio = FindAnyObjectByType<Audio>();
+        audio.Play(audio.coin);
+
         float screenWidth = Camera.main.orthographicSize * Camera.main.aspect;
         float screenHeight = Camera.main.orthographicSize;
 
