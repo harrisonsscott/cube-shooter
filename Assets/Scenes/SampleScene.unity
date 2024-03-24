@@ -155,9 +155,8 @@ RectTransform:
   m_Children:
   - {fileID: 57044198}
   - {fileID: 797464336}
-  - {fileID: 722873512}
-  - {fileID: 217007797}
   - {fileID: 159007333}
+  - {fileID: 217007797}
   m_Father: {fileID: 351422141}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -601,6 +600,7 @@ RectTransform:
   m_Children:
   - {fileID: 1365353157}
   - {fileID: 22098700}
+  - {fileID: 722873512}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1171,7 +1171,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 22098700}
+  m_Father: {fileID: 351422141}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -2306,8 +2306,9 @@ MonoBehaviour:
   screenWidth: 0
   screenHeight: 0
   timeSinceGameStart: 0
-  damage: 126
-  fireRate: 162
+  spawnBoss: 0
+  damage: 0
+  fireRate: 0
 --- !u!4 &1143916707
 Transform:
   m_ObjectHideFlags: 0
@@ -2336,7 +2337,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   progressRed: {fileID: 2007821948}
-  rowsUntilBoss: 3
+  rowsUntilBoss: 5
+  timeUntilBoss: 0
 --- !u!1 &1160342762
 GameObject:
   m_ObjectHideFlags: 0
@@ -2507,6 +2509,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 3
   sprite: {fileID: 0}
+  direction: {x: 0, y: 0, z: 0}
+  layerOwner: 0
 --- !u!50 &1186723724
 Rigidbody2D:
   serializedVersion: 4
@@ -8957,6 +8961,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 3
   sprite: {fileID: 0}
+  direction: {x: 0, y: 0, z: 0}
+  layerOwner: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

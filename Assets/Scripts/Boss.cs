@@ -13,7 +13,7 @@ public class Boss : MonoBehaviour
 
     [Header("Variables")]
     public int rowsUntilBoss; // how many rows it take for one boss to spawn, ex: 10 means once every 10 rows
-    private float timeUntilBoss;
+    public float timeUntilBoss;
 
     [Header("Other")]
     private Mothership mothership; // reference to the mothership class
@@ -29,7 +29,21 @@ public class Boss : MonoBehaviour
         timeUntilBoss = Mathf.Max(0, rowsUntilBoss * Constants.rowTime - mothership.timeSinceGameStart);
         progressGreen.GetComponent<RectTransform>().offsetMax = new Vector2(
             1 - timeUntilBoss / (rowsUntilBoss * Constants.rowTime) * progressRed.GetComponent<RectTransform>().sizeDelta.x, 0);
-        Debug.Log(timeUntilBoss);
+
+        if (timeUntilBoss <= 0){
+            SpawnBoss();
+        }
+        
     }
 
+    public void SpawnBoss(){
+        if (mothership.spawnBoss)
+            return;
+
+        // spawn boss if there isn't already one
+        if (FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length == 0){
+            mothership.spawnBoss = true;
+            mothership.isBattlingBoss = true;
+        }
+    }
 }

@@ -6,6 +6,7 @@ using TMPro;
 using Unity.Mathematics;
 using System;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 
 // this script handles all the ships
 
@@ -35,6 +36,7 @@ public class Mothership : MonoBehaviour
     private GameObject playerGO; // GO stands for GameObject
     private GameObject enemyGO;
     private List<GameObject> blocksGO;
+    private Boss bossScript;
     [Header("Variables")]
     [SerializeField]
     public double coins;
@@ -48,6 +50,8 @@ public class Mothership : MonoBehaviour
     public float screenHeight; // height of the camera's view in world space
     public float timeSinceGameStart;
     private bool hasExploded; // bool to make sure the explosion effect doesn't play twice
+    public bool spawnBoss; // if set to true, a boss will spawn instead of a row of blocks
+    internal bool isBattlingBoss; // block rows won't spawn when set to true
 
     private Gradient gradient;
     private GradientColorKey[] colorKeys;
@@ -60,6 +64,9 @@ public class Mothership : MonoBehaviour
     private int fireRate;
 
     public void Start(){
+        bossScript = GetComponent<Boss>();
+
+        // enabling/disabling ui
         for (int i = 0; i < enableOnPlay.Count; i++)
             enableOnPlay[i].SetActive(false);
         
@@ -93,7 +100,10 @@ public class Mothership : MonoBehaviour
             return;
         }
         CancelInvoke("spawnRow");
+        
         hasExploded = false;
+        isBattlingBoss = false;
+        spawnBoss = false;
 
         GlobalVariables.currentRow = 0;
 
@@ -129,12 +139,6 @@ public class Mothership : MonoBehaviour
         player.fireRate = math.max(fireRate, 1); // make the firerate >1
         GlobalVariables.isAlive = true;
 
-        // enemy = new Enemy(enemySprite, player){ // create new enemy object
-        //     bullet = bulletRed
-        // };
-        // enemyGO = enemy.Spawn("Enemy"); // instantiate enemy
-        // enemy = enemyGO.GetComponent<Enemy>(); // update the enemy object to the one used by the GO
-
         blocks = new List<Block>();
         blocksGO = new List<GameObject>();
 
@@ -146,7 +150,9 @@ public class Mothership : MonoBehaviour
 
     private void Update() {
         if (GlobalVariables.isAlive){
-            timeSinceGameStart += Time.deltaTime;
+            if (!GlobalVariables.isPaused){
+                timeSinceGameStart += Time.deltaTime;
+            }
             explosionParticle.transform.position = playerGO.transform.position + new Vector3(0,1,0);
             coinsDisplay.text = "Coins: " + coins;
             scoreDisplay.text = "Score: \n" + GlobalFunctions.abbreviate(score);
@@ -216,17 +222,32 @@ public class Mothership : MonoBehaviour
         //     blocksGO.Add(blockGO);
         //     blocks.Add(blockGO.GetComponent<Block>());
         // }
-        for (int i = 0; i < Constants.blocksPerRow; i++){
-            Vector3 size = new Vector3(screenWidth/Constants.blocksPerRow*2f, screenWidth/Constants.blocksPerRow*2f, 1);
-            Debug.Log(screenWidth);
-            GameObject blockGO = spawnBlock(
-                "block", 
-                new Vector3(i * size.x - screenWidth + size.x/2, screenHeight+1, 0),
-                size,
-                (int)(GlobalVariables.currentRow / 2 + UnityEngine.Random.Range(1, 5)));
-            blocksGO.Add(blockGO);
-            blocks.Add(blockGO.GetComponent<Block>());
+
+        // spawn a row of blocks or a boss every so often
+        if (spawnBoss){
+            enemy = new Enemy(enemySprite, player){ // create new enemy object
+                bullet = bulletRed
+            };
+            enemyGO = enemy.Spawn("Enemy"); // instantiate enemy
+            enemy = enemyGO.GetComponent<Enemy>(); // update the enemy object to the one used by the GO
+            enemy.OnDeath(() => {
+                isBattlingBoss = false;
+                timeSinceGameStart = 0;
+            });
+            spawnBoss = false; // prevent spawning the boss multiple times
+        } else if (!isBattlingBoss) {
+            for (int i = 0; i < Constants.blocksPerRow; i++){
+                Vector3 size = new Vector3(screenWidth/Constants.blocksPerRow*2f, screenWidth/Constants.blocksPerRow*2f, 1);
+                GameObject blockGO = spawnBlock(
+                    "block", 
+                    new Vector3(i * size.x - screenWidth + size.x/2, screenHeight+1, 0),
+                    size,
+                    (int)(GlobalVariables.currentRow / 2 + UnityEngine.Random.Range(1, 5)));
+                blocksGO.Add(blockGO);
+                blocks.Add(blockGO.GetComponent<Block>());
+            }
         }
+        
         GlobalVariables.currentRow += 1;
     }
 

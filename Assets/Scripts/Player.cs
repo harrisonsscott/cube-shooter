@@ -70,7 +70,6 @@ public class Player : Ship
         player.bulletSpeed = bulletSpeed;
         player.fireRate = fireRate;
         player.bullet = bullet;
-        Debug.Log(bullet);
         player.maxHealth = maxHealth;
 
         Rigidbody2D rigidbody = ship.AddComponent<Rigidbody2D>();

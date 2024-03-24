@@ -17,6 +17,7 @@ public class Ship : MonoBehaviour
 
     private GameObject bulletClone;
     private float index;
+    private Action onDeath; // action that plays on death
 
     public Ship(Sprite sprite) {
         this.sprite = sprite;
@@ -52,19 +53,24 @@ public class Ship : MonoBehaviour
 
         Bullet bulletObject = new Bullet(bullet);
             
-        bulletClone = bulletObject.Spawn("bullet", new Vector3(transform.position.x, Math.Max(transform.position.y + 0.5f, -4), 0) , quaternion.identity);
+        bulletClone = bulletObject.Spawn(
+            "bullet", 
+            new Vector3(transform.position.x, Math.Max(transform.position.y, -4), 0), 
+            quaternion.identity, 
+            transform.up,
+            gameObject.layer);
         bulletClone.GetComponent<Bullet>().damage = damage;
     }
 
     public virtual void Explode(){ // automatically called when the ship dies
+        onDeath?.Invoke();
         Destroy(gameObject);
         CancelInvoke("Shoot");
-        Debug.Log("boom!");
     }
 
     public virtual void OnTriggerEnter2D(Collider2D other) { // when a bullet hits the ship
         if (LayerMask.LayerToName(other.gameObject.layer) == "Bullet"){ // make sure the collider is a bullet
-            if (other.gameObject != bulletClone){ // prevent the ship from dying from its own bullet
+            if (other.gameObject.GetComponent<Bullet>().layerOwner != gameObject.layer){ // prevent the ship from dying from its own bullet
                 int damage = other.gameObject.GetComponent<Bullet>().damage;
                 health -= damage;
                 Destroy(other.gameObject); // destroy bullet
@@ -73,10 +79,17 @@ public class Ship : MonoBehaviour
         
     }
 
+    public void OnDeath(Action action) {
+        onDeath = action;
+    }
+
     public virtual void Update() {
         if (health <= 0 && GlobalVariables.isAlive){ // explode if health is 0 or less
             Explode();
         }
+
+        if (!GlobalVariables.isAlive)
+            Destroy(gameObject);
     }
 
     public virtual GameObject Spawn(string name){
