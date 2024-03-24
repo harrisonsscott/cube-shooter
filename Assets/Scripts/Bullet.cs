@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour {
@@ -17,7 +18,12 @@ public class Bullet : MonoBehaviour {
 
     private void Update() {
         if (!GlobalVariables.isPaused)
-            transform.position += new Vector3(0, Time.deltaTime*5f, 0);
+            transform.position += new Vector3(0, Mathf.Abs(Time.deltaTime*5f), 0);
+    
+        // destroy when the game ends or the bullet is out of bounds
+        if (!GlobalVariables.isAlive || Math.Abs(transform.position.y) > Camera.main.orthographicSize * 2){
+            Destroy(gameObject);
+        }
     }
 
     public GameObject Spawn(){
@@ -41,7 +47,7 @@ public class Bullet : MonoBehaviour {
         bullet1.damage = damage;
 
         CircleCollider2D collider = bullet.AddComponent<CircleCollider2D>();
-        collider.excludeLayers = 1 << LayerMask.NameToLayer("Coin"); // exclude coin layer
+        collider.excludeLayers = 1 << LayerMask.NameToLayer("Coin") | 1 << LayerMask.NameToLayer("Player"); // exclude coin layer
         collider.radius = 1.28f;
 
         Rigidbody2D rigidbody = bullet.AddComponent<Rigidbody2D>();

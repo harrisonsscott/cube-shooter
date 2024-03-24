@@ -52,7 +52,7 @@ public class Ship : MonoBehaviour
 
         Bullet bulletObject = new Bullet(bullet);
             
-        bulletClone = bulletObject.Spawn("bullet", new Vector3(transform.position.x, transform.position.y + 0.5f, 0) , quaternion.identity);
+        bulletClone = bulletObject.Spawn("bullet", new Vector3(transform.position.x, Math.Max(transform.position.y + 0.5f, -4), 0) , quaternion.identity);
         bulletClone.GetComponent<Bullet>().damage = damage;
     }
 

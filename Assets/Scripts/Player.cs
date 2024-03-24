@@ -25,7 +25,7 @@ public class Player : Ship
         transform.position = new Vector3(transform.position.x, -4, transform.position.z);
 
         if (Input.touchCount > 0 && GlobalVariables.isAlive && !GlobalVariables.isPaused){
-            GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+            GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
             Touch touch = Input.GetTouch(0);
             if (previousTouch == null || touch.phase == TouchPhase.Began){ // touch just started
                 previousTouch = touch.position;
@@ -40,7 +40,7 @@ public class Player : Ship
             }
             previousTouch = touch.position;
         } else {
-            GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition; 
+            GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll; 
         }
     }
 

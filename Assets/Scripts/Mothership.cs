@@ -46,6 +46,7 @@ public class Mothership : MonoBehaviour
     public float screenWidth; // width of the camera's view in world space
     [SerializeField]
     public float screenHeight; // height of the camera's view in world space
+    public float timeSinceGameStart;
     private bool hasExploded; // bool to make sure the explosion effect doesn't play twice
 
     private Gradient gradient;
@@ -78,7 +79,7 @@ public class Mothership : MonoBehaviour
     }
 
     public void StartGame() {
-        
+        timeSinceGameStart = 0;
         score = 0;
 
         // enable/disable UI elements depending on whether or not the player is alive
@@ -145,10 +146,12 @@ public class Mothership : MonoBehaviour
 
     private void Update() {
         if (GlobalVariables.isAlive){
+            timeSinceGameStart += Time.deltaTime;
             explosionParticle.transform.position = playerGO.transform.position + new Vector3(0,1,0);
             coinsDisplay.text = "Coins: " + coins;
             scoreDisplay.text = "Score: \n" + GlobalFunctions.abbreviate(score);
         } else {
+            timeSinceGameStart = 0;
             //play explosion effect on player death
             if (explosionParticle && !explosionParticle.GetComponent<ParticleSystem>().isPlaying && !hasExploded){
                 hasExploded = true;
@@ -220,7 +223,7 @@ public class Mothership : MonoBehaviour
                 "block", 
                 new Vector3(i * size.x - screenWidth + size.x/2, screenHeight+1, 0),
                 size,
-                (int)(GlobalVariables.currentRow * 1.5f + UnityEngine.Random.Range(1, 5)));
+                (int)(GlobalVariables.currentRow / 2 + UnityEngine.Random.Range(1, 5)));
             blocksGO.Add(blockGO);
             blocks.Add(blockGO.GetComponent<Block>());
         }
