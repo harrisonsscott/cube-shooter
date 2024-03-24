@@ -43,39 +43,17 @@ public class Ship : MonoBehaviour
         InvokeRepeating("Shoot", 1, 1/fireRate); // player will shoot every so often
     }
 
-    public virtual int Shoot(){ // sends a raycast out, and shoots if it hits something
+    public virtual void Shoot(){ // sends a raycast out, and shoots if it hits something
         if (GlobalVariables.isPaused)
-            return 0;
-        int layerMask = ~(1 << gameObject.layer | 1 << LayerMask.NameToLayer("Bullet")); // everything but ship layer and bullet layer
+            return;
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, Mathf.Infinity, layerMask);
+        // int layerMask = ~(1 << gameObject.layer | 1 << LayerMask.NameToLayer("Bullet")); // everything but ship layer and bullet layer
+        // RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, Mathf.Infinity, layerMask);
 
-        //if (hit.collider != null){ // raycast hit something, start shooting
-            Bullet bulletObject = new Bullet(bullet);
+        Bullet bulletObject = new Bullet(bullet);
             
-            bulletClone = bulletObject.Spawn("bullet", transform.position + new Vector3(0, 0.5f, 0), quaternion.identity);
-            bulletClone.GetComponent<Bullet>().damage = damage;
-            
-            // bulletClone.transform.position = transform.position; // set bullet position to ship
-            // bulletClone.transform.parent = gameObject.transform;
-            
-            // bulletClone.transform.position += new Vector3(0, Time.deltaTime * fireRate * transform.up.y, 0); // move the bullet up (according to the ship)
-
-            // LeanTween.value(0, 10, 5).setOnUpdate((float a) => {
-                // if (bulletClone){
-                    // bulletClone.transform.position = new Vector3(transform.position.x, (transform.position.y + a) * transform.up.y, 0);
-                // }
-                // 
-            // }).setOnComplete(() => {
-                // if (bulletClone)
-                    // Destroy(bulletClone);
-            // });
-
-            // if the bullet hits anything, it'll trigger OnTriggerEnter2D
-            return 1;
-        // } else {
-        //     return 0;
-        // }
+        bulletClone = bulletObject.Spawn("bullet", new Vector3(transform.position.x, transform.position.y + 0.5f, 0) , quaternion.identity);
+        bulletClone.GetComponent<Bullet>().damage = damage;
     }
 
     public virtual void Explode(){ // automatically called when the ship dies

@@ -2126,8 +2126,8 @@ MonoBehaviour:
   level: 0
   screenWidth: 0
   screenHeight: 0
-  damage: 0
-  fireRate: 0
+  damage: 126
+  fireRate: 162
 --- !u!4 &1143916707
 Transform:
   m_ObjectHideFlags: 0
