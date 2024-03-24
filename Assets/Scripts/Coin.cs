@@ -20,7 +20,7 @@ public class Coin : MonoBehaviour {
             Destroy(gameObject);
             return;
         }
-        if (!GlobalVariables.isAlive){
+        if (!GlobalVariables.isPaused){
             transform.position -= new Vector3(0, Time.deltaTime * Constants.gravity / 2, 0); // slowly descend (slower than gravity to make them easier to collect)
         }
     }

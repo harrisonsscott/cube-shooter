@@ -169,10 +169,15 @@ public class Mothership : MonoBehaviour
         // add components
         SpriteRenderer spriteRenderer = block.AddComponent<SpriteRenderer>();
         Block blockComponent = block.AddComponent<Block>();
-        BoxCollider2D boxCollider = block.AddComponent<BoxCollider2D>();
+        BoxCollider2D boxCollider = block.AddComponent<BoxCollider2D>(); // the collider the player can touch
+        BoxCollider2D boxCollider2 = block.AddComponent<BoxCollider2D>(); // the collider that kills the player
 
         boxCollider.size = new Vector2(1,1);
-        boxCollider.isTrigger = true;
+        boxCollider.isTrigger = false;
+
+        boxCollider2.size = new Vector2(0.8f, 0.1f);
+        boxCollider2.isTrigger = true;
+        boxCollider2.offset = new Vector2(0, -0.5f + boxCollider2.size.y/2 );
 
         blockComponent.sprite = blockSprite;
         blockComponent.health = health;
