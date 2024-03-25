@@ -780,7 +780,13 @@ PlayerSettings:
   XboxOneOverrideIdentityName: 
   XboxOneOverrideIdentityPublisher: 
   vrEditorSettings: {}
-  cloudServicesEnabled: {}
+  cloudServicesEnabled:
+    Build: 0
+    Game Performance: 0
+    Legacy Analytics: 0
+    Purchasing: 0
+    UDP: 0
+    Unity Ads: 0
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -800,7 +806,7 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: f7ed95c4-61b8-4fc5-a4b9-40a905d2b1dd
+  cloudProjectId: 06cd4092-c2f9-4cd6-ab33-205cc01c8d23
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: Cube Shooter
