@@ -1,12 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using TMPro;
 using Unity.Mathematics;
 using System;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 
 // this script handles all the ships
 
@@ -28,6 +25,7 @@ public class Mothership : MonoBehaviour
     public Sprite bullet; // player bullet GO
     public Sprite bulletRed; // enemy bullet GO
     public GameObject explosionParticle; // particle system that plays on a ship's death
+    public GameObject explosionParticle2; // particle system that plays on a block's death
     public TMP_Text scoreDisplay; // text that displays the player's high score
     public TMP_Text coinsDisplay; // text in the top right corner that displays the amount of coins the player has
     private Player player;
@@ -185,6 +183,7 @@ public class Mothership : MonoBehaviour
         Block blockComponent = block.AddComponent<Block>();
         BoxCollider2D boxCollider = block.AddComponent<BoxCollider2D>(); // the collider the player can touch
         BoxCollider2D boxCollider2 = block.AddComponent<BoxCollider2D>(); // the collider that kills the player
+        Color color = gradient.Evaluate(blockComponent.health / 30f); // color based on health
 
         boxCollider.size = new Vector2(1,0.8f);
         boxCollider.offset = new Vector2(0, 0.1f);
@@ -198,9 +197,10 @@ public class Mothership : MonoBehaviour
         blockComponent.health = health;
         blockComponent.player = playerGO;
         blockComponent.coinSprite = coinSprite;
+        blockComponent.color = color;
 
         spriteRenderer.sprite = blockSprite;
-        spriteRenderer.color = gradient.Evaluate(blockComponent.health / 30f); // color based on health
+        spriteRenderer.color = color;
 
         block.transform.localScale = size;
         block.transform.position = position;

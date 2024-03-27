@@ -22,6 +22,8 @@ public class Player : Ship
         
         base.Update();
 
+        health = Mathf.Clamp(health + (maxHealth/25*Time.deltaTime), 0, maxHealth);
+
         transform.position = new Vector3(transform.position.x, -4, transform.position.z);
 
         if (Input.touchCount > 0 && GlobalVariables.isAlive && !GlobalVariables.isPaused){

@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Block : MonoBehaviour {
@@ -6,30 +7,69 @@ public class Block : MonoBehaviour {
     public Sprite sprite;
     public Sprite coinSprite;
     public GameObject player;
+    public Color color;
+    private bool isExploding; // prevents the block from playing multiple death animations
 
-    public Block(Sprite sprite, GameObject player, Sprite coinSprite){
+    public Block(Sprite sprite, GameObject player, Sprite coinSprite, Color color){
         this.sprite = sprite;
         this.player = player;
         this.coinSprite = coinSprite;
+        this.color = color;
 
         health = 5;
     }
 
-    public Block(int health, Sprite sprite, GameObject player, Sprite coinSprite){
+    public Block(int health, Sprite sprite, GameObject player, Sprite coinSprite, Color color){
         this.health = health;
         this.sprite = sprite;
         this.player = player;
         this.coinSprite = coinSprite;
+        this.color = color;
     }
 
     public void Explode(){ // automatically called when block dies
+        if (isExploding)
+            return;
+        
+        isExploding = true;
+
         Audio audio = FindAnyObjectByType<Audio>();
         audio.Play(audio.pop);
 
         Coin coin = new Coin(1, coinSprite); // spawn coin on death
         coin.Spawn(transform.position);
 
-        Destroy(gameObject);
+        // play a death animation (Explosion)
+        Mothership mothership = FindAnyObjectByType<Mothership>();
+        GameObject particleClone = Instantiate(mothership.explosionParticle2, transform.parent);
+
+        Gradient grad = new Gradient();
+        grad.SetKeys(new GradientColorKey[]{
+            new GradientColorKey(color, 0),
+            new GradientColorKey(color - new Color(0.1f, 0.1f, 0.1f), 1)
+        }, new GradientAlphaKey[]{
+            new GradientAlphaKey(1, 0),
+            new GradientAlphaKey(1, 1)
+        });
+
+        particleClone.transform.position = transform.position;
+        particleClone.SetActive(true);
+        particleClone.GetComponent<ParticleSystem>().Play();
+        
+        var col = particleClone.GetComponent<ParticleSystem>().colorOverLifetime;
+        col.enabled = true;
+        col.color = grad;
+
+        LeanTween.value(0, 1, 1).setOnComplete(() => {
+            if (!GlobalVariables.isPaused){
+                particleClone.gameObject.transform.position -= new Vector3(0, Time.deltaTime * Constants.gravity, 0); // slowly descend
+            }
+            Destroy(particleClone);
+            Destroy(gameObject);
+        });
+
+        gameObject.SetActive(false);
+
     }
 
     // functions for spawning in blocks is in Mothership.cs
@@ -40,8 +80,10 @@ public class Block : MonoBehaviour {
             int damage = other.gameObject.GetComponent<Bullet>().damage;
             health -= damage;
             Destroy(other.gameObject); // destroy bullet
-        } else if (LayerMask.LayerToName(other.gameObject.layer) == "Player"){ // destroy player on touch
-            other.gameObject.GetComponent<Player>().Explode();
+        } else if (LayerMask.LayerToName(other.gameObject.layer) == "Player"){ // harm player on touch
+            Player player = other.gameObject.GetComponent<Player>();
+            player.health -= player.maxHealth/2;
+            Explode();
         }
         
     }

@@ -7,8 +7,8 @@ using Unity.Mathematics;
 
 public class Ship : MonoBehaviour
 {
-    public int health;
-    public int maxHealth; // automatically set to health at the start
+    public float health;
+    public float maxHealth; // automatically set to health at the start
     public int damage;
     public float bulletSpeed; // how fast the bullets are
     public float fireRate; // bullets shot per second 
