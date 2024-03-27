@@ -21,7 +21,8 @@ public class Mothership : MonoBehaviour
     [Header("Objects")]
     public GameObject fireRateButton; // upgrade button in menu
     public GameObject damageButton; // upgrade button in menu
-    public List<GameObject> disableOnPlay; // shows in the meu but not the game, ex: shop
+    public GameObject healthButton; // upgrade button in menu
+    public List<GameObject> disableOnPlay; // shows in the menu but not the game, ex: shop
     public List<GameObject> enableOnPlay; // shows in the game but not the menu, ex: health bar
     public GameObject blockTextTemplate; // empty gameobject with TMP_TEXT
     public Sprite bullet; // player bullet GO
@@ -62,6 +63,8 @@ public class Mothership : MonoBehaviour
     private int damage;
     [SerializeField]
     private int fireRate;
+    [SerializeField]
+    private int health;
 
     public void Start(){
         bossScript = GetComponent<Boss>();
@@ -76,13 +79,13 @@ public class Mothership : MonoBehaviour
         // implement data fetching logic here
         damage = 0;
         fireRate = 0;
+        health = 0;
 
         // Refresh the GUI after fetching data
         Purchase(0);
-        fireRateButton.transform.GetChild(1).GetComponent<TMP_Text>().text = "Level " + fireRate;
-        fireRateButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "$" + GlobalFunctions.abbreviate(Math.Pow(2, fireRate));
-        damageButton.transform.GetChild(1).GetComponent<TMP_Text>().text = "Level " + damage;
-        damageButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "$" + GlobalFunctions.abbreviate(Math.Pow(2, damage));
+        RefreshUpgradeButton(fireRateButton, fireRate);
+        RefreshUpgradeButton(damageButton, damage);
+        RefreshUpgradeButton(healthButton, health);
     }
 
     public void StartGame() {
@@ -137,6 +140,8 @@ public class Mothership : MonoBehaviour
         player.mothership = this; // allow the player to access the mothership
         player.damage = math.max(damage, 1); // make the damage >1
         player.fireRate = math.max(fireRate, 1); // make the firerate >1
+        player.maxHealth = math.max(health * 5, 5);
+        player.health = player.maxHealth;
         GlobalVariables.isAlive = true;
 
         blocks = new List<Block>();
@@ -181,7 +186,8 @@ public class Mothership : MonoBehaviour
         BoxCollider2D boxCollider = block.AddComponent<BoxCollider2D>(); // the collider the player can touch
         BoxCollider2D boxCollider2 = block.AddComponent<BoxCollider2D>(); // the collider that kills the player
 
-        boxCollider.size = new Vector2(1,1);
+        boxCollider.size = new Vector2(1,0.8f);
+        boxCollider.offset = new Vector2(0, 0.1f);
         boxCollider.isTrigger = false;
 
         boxCollider2.size = new Vector2(0.8f, 0.1f);
@@ -255,8 +261,13 @@ public class Mothership : MonoBehaviour
         if (cost > coins)
             return false;
         coins -= cost;
-        coinsDisplay.text = "Coins: " + coins;
+        coinsDisplay.text = "Coins: " + GlobalFunctions.abbreviate(coins);
         return true;
+    }
+
+    private void RefreshUpgradeButton(GameObject gameObject, int value){ // updates the upgrade buttons
+        gameObject.transform.GetChild(1).GetComponent<TMP_Text>().text = "Level " + value;
+        gameObject.transform.GetChild(2).GetComponent<TMP_Text>().text = "$" + GlobalFunctions.abbreviate(Math.Pow(2, value));
     }
 
     public void LevelUp(string type){ // called by the Fire Rate/Damage upgrade buttons in the menu
@@ -266,8 +277,7 @@ public class Mothership : MonoBehaviour
                 cost = Math.Pow(2, fireRate);
                 if (Purchase(cost)){
                     fireRate += 1;
-                    fireRateButton.transform.GetChild(1).GetComponent<TMP_Text>().text = "Level " + fireRate;
-                    fireRateButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "$" + GlobalFunctions.abbreviate(Math.Pow(2, fireRate));
+                    RefreshUpgradeButton(fireRateButton, fireRate);
                 }
                 
                 break;
@@ -275,8 +285,14 @@ public class Mothership : MonoBehaviour
                 cost = Math.Pow(2, damage);
                 if (Purchase(cost)){
                     damage += 1;
-                    damageButton.transform.GetChild(1).GetComponent<TMP_Text>().text = "Level " + damage;
-                    damageButton.transform.GetChild(2).GetComponent<TMP_Text>().text = "$" + GlobalFunctions.abbreviate(Math.Pow(2, damage));
+                    RefreshUpgradeButton(damageButton, damage);
+                }
+                break;
+            case "health":
+                cost = Math.Pow(2, health);
+                if (Purchase(cost)){
+                    health += 1;
+                    RefreshUpgradeButton(healthButton, health);
                 }
                 break;
         }
