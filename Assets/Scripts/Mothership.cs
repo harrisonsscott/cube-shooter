@@ -1,9 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Unity.Mathematics;
 using System;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 // this script handles all the ships
 
@@ -298,3 +300,24 @@ public class Mothership : MonoBehaviour
         }
     }
 }
+
+// custom inspector
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(Mothership))]
+class MothershipEditor : Editor {
+    public override void OnInspectorGUI()
+    {
+        Mothership mothership = (Mothership)target;
+        if (mothership == null) return;
+        
+        DrawDefaultInspector();
+
+        int value = 0;
+        GUILayout.Label("\nEditor", EditorStyles.boldLabel);
+        GUILayout.HorizontalSlider(value, 0, 100);
+        GUILayout.Label("\nCurrent Row: " + value);
+        
+    }
+}
+#endif

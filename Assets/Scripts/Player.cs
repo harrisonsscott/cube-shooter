@@ -9,6 +9,7 @@ public class Player : Ship
     private Vector2 previousTouch; // the touch position of the last frame
     private GameObject bulletClone;
     private float index;
+
     public Player(Sprite sprite) : base(sprite) {
         this.sprite = sprite;
 
@@ -47,12 +48,15 @@ public class Player : Ship
     }
 
     public override void Explode(){
+        GlobalVariables.isAlive = false;
+        FindAnyObjectByType<AdsInterstitial>().Load();
+        FindAnyObjectByType<AdsInterstitial>().Show();
         base.Explode();
+
         
         Audio audio = FindAnyObjectByType<Audio>();
         audio.Play(audio.hit);
 
-        GlobalVariables.isAlive = false;
 
         // enable/disable UI elements depending on whether or not the player is alive
         for (int i = 0; i < mothership.enableOnPlay.Count; i++)
@@ -60,6 +64,7 @@ public class Player : Ship
         
         for (int i = 0; i < mothership.disableOnPlay.Count; i++)
             mothership.disableOnPlay[i].SetActive(true);
+
     }
 
     public override GameObject Spawn(string name)

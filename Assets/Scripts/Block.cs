@@ -101,7 +101,7 @@ public class Block : MonoBehaviour {
             Explode();
         }
 
-        if (transform.position.y < -Camera.main.orthographicSize){ // destroy the block when it's passed the player's screen
+        if (GlobalVariables.isAlive && transform.position.y < -Camera.main.orthographicSize){ // destroy the block when it's passed the player's screen
             player.GetComponent<Player>().mothership.score += 1;
             Destroy(gameObject);
         }
